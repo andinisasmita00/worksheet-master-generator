@@ -1,0 +1,16 @@
+{
+  "name": "worksheet-master-generator-v5-1",
+  "version": "5.1.0",
+  "private": true,
+  "description": "Server-side Worksheet Master Generator for Render",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=24.0.0 <25.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
