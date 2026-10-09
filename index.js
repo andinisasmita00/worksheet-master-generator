@@ -151,8 +151,14 @@ export default {
       });
     }
 
-    if (url.pathname === "/health") return json({ok:true, version:"5.2-cloudflare"});
-
+    if (url.pathname === "/health") {
+  return json({
+    ok: true,
+    version: "5.2-cloudflare",
+    adminKeyConfigured: Boolean(env.ADMIN_KEY),
+    licenseSecretConfigured: Boolean(env.LICENSE_SECRET)
+  });
+}
     if (url.pathname === "/api/activate" && request.method === "POST") {
       const body = await request.json().catch(()=>({}));
       const ok = await validLicense(env.LICENSE_SECRET || "", body.licenseKey);
