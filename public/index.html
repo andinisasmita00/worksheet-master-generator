@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Worksheet Master Generator</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f6f7fb;color:#17202a;font-family:Arial,sans-serif}
+.wrap{max-width:760px;margin:auto;padding:18px}
+.header{text-align:center;padding:14px 8px 20px}
+.logo{font-size:30px;font-weight:800}.tag{color:#667085;margin-top:7px}
+.card{background:#fff;border:1px solid #e6e8ee;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 6px 24px rgba(16,24,40,.06)}
+h2{font-size:18px;margin:0 0 14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}
+select,input{width:100%;height:45px;border:1px solid #d7dce5;border-radius:11px;padding:0 12px;background:#fff;font-size:15px}
+input:focus,select:focus{outline:2px solid #c7d2fe;border-color:#818cf8}
+.full{grid-column:1/-1}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+button{border:0;border-radius:11px;padding:13px 17px;font-weight:800;cursor:pointer;font-size:14px}
+.primary{background:#111827;color:white;flex:1}.secondary{background:#eef1f5;color:#17202a}
+.status{font-size:13px;margin-top:10px;color:#667085}
+.result{display:none}
+.prompt{background:#111827;color:#f8fafc;border-radius:12px;padding:14px;white-space:pre-wrap;line-height:1.55;font-size:13px;margin:10px 0}
+.pagehead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.copyone{padding:8px 10px;font-size:12px;background:#e8eefc}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:12px;font-weight:700}
+.help{background:#f8fafc;border-radius:12px;padding:12px;font-size:13px;line-height:1.5;color:#475467}
+.footer{text-align:center;color:#98a2b3;font-size:11px;padding:20px}
+.hidden{display:none}
+@media(max-width:620px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.wrap{padding:12px}.logo{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="header">
+    <div class="logo">Worksheet Master Generator</div>
+    <div class="tag">Buat Image Prompt Worksheet dengan cepat</div>
+  </header>
+
+  <section class="card">
+    <h2>🔐 Aktivasi</h2>
+    <div class="field">
+      <label>License Key</label>
+      <input id="license" autocomplete="off" placeholder="Masukkan License Key Anda">
+    </div>
+    <div class="actions" style="margin-top:10px">
+      <button class="primary" onclick="activate()">Aktifkan</button>
+    </div>
+    <div id="status" class="status">Masukkan license untuk mulai.</div>
+  </section>
+
+  <section class="card">
+    <h2>🎨 Pilih Worksheet</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Usia</label>
+        <select id="age">
+          <option>2–3 tahun</option><option>4–5 tahun</option><option>5–6 tahun</option><option>6–7 tahun</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Materi</label>
+        <select id="subject">
+          <option>Logika & problem solving</option><option>Warna & bentuk</option><option>Pra-menulis</option><option>Berhitung</option><option>Bahasa</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Tema</label>
+        <select id="theme">
+          <option>Hewan lucu</option><option>Hewan kebun binatang</option><option>Hewan laut</option><option>Dinosaurus</option><option>Kendaraan</option><option>Buah & sayur</option><option>Alam</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Aktivitas</label>
+        <select id="activity">
+          <option>Mewarnai</option><option>Mencocokkan</option><option>Tracing</option><option>Menghitung</option><option>Maze</option><option>Lingkari</option><option>Pilih</option><option>Urutkan</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Jumlah Halaman</label>
+        <select id="pages">
+          <option>5</option><option>10</option><option>20</option><option>30</option><option>50</option><option>100</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Ukuran</label>
+        <select id="size"><option>A4 Portrait</option></select>
+      </div>
+      <div class="field">
+        <label>Gaya</label>
+        <select id="style"><option>Simple flat vector</option><option>Flat vector</option><option>Cute cartoon</option></select>
+      </div>
+      <div class="field">
+        <label>Karakter</label>
+        <select id="character"><option>Hewan lucu sebagai karakter</option><option>Hewan sederhana</option><option>Karakter hewan chibi</option></select>
+      </div>
+      <div class="field">
+        <label>Bahasa</label>
+        <select id="language"><option>Bahasa Indonesia</option><option>Bahasa Inggris</option></select>
+      </div>
+    </div>
+    <div class="actions" style="margin-top:15px">
+      <button class="primary" onclick="generate()">✨ Generate Image Prompts</button>
+    </div>
+  </section>
+
+  <section id="resultCard" class="card result">
+    <div class="pagehead">
+      <h2 style="margin:0">📝 Hasil Prompt</h2>
+      <span class="badge" id="countBadge"></span>
+    </div>
+    <div class="help" style="margin-top:12px">
+      Copy prompt di bawah, lalu tempelkan ke AI image generator untuk membuat worksheet.
+    </div>
+    <div id="result"></div>
+    <div class="actions" style="margin-top:12px">
+      <button class="secondary" onclick="copyAll()">📋 Copy Semua</button>
+    </div>
+  </section>
+
+  <div class="footer">Worksheet Master Generator • Buyer Mode</div>
+</div>
+
+<script>
+let lastPrompts=[];
+const $=id=>document.getElementById(id);
+function setStatus(t){$("status").textContent=t}
+async function activate(){
+  const license=$("license").value.trim();
+  if(!license){setStatus("Masukkan License Key terlebih dahulu.");return}
+  try{
+    const r=await fetch("/api/activate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({licenseKey:license})});
+    const d=await r.json();
+    setStatus(d.message || "Selesai.");
+  }catch(e){setStatus("Tidak dapat terhubung ke server. Coba lagi.")}
+}
+function cfg(){
+  return {
+    age:$("age").value, subject:$("subject").value, theme:$("theme").value,
+    activity:$("activity").value, pages:$("pages").value, size:$("size").value,
+    style:$("style").value, character:$("character").value, language:$("language").value
+  }
+}
+async function generate(){
+  const license=$("license").value.trim();
+  if(!license){setStatus("Aktifkan license terlebih dahulu.");return}
+  setStatus("Sedang membuat prompt...");
+  try{
+    const r=await fetch("/api/generate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({licenseKey:license,config:cfg()})});
+    const d=await r.json();
+    if(!d.ok){setStatus(d.message||"License tidak valid.");return}
+    lastPrompts=d.prompts||[];
+    $("resultCard").style.display="block";
+    $("countBadge").textContent=lastPrompts.length+" halaman";
+    $("result").innerHTML=lastPrompts.map((p,i)=>`
+      <div style="margin-top:18px">
+        <div class="pagehead"><strong>Halaman ${i+1}</strong><button class="copyone" onclick="copyOne(${i})">Copy</button></div>
+        <div class="prompt">${escapeHtml(p)}</div>
+      </div>`).join("");
+    setStatus("Berhasil membuat "+lastPrompts.length+" prompt.");
+    window.scrollTo({top:$("resultCard").offsetTop-10,behavior:"smooth"});
+  }catch(e){setStatus("Terjadi masalah koneksi. Coba lagi.")}
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+async function copyOne(i){
+  await navigator.clipboard.writeText(lastPrompts[i]);
+  alert("Prompt halaman "+(i+1)+" sudah disalin.");
+}
+async function copyAll(){
+  if(!lastPrompts.length)return;
+  await navigator.clipboard.writeText(lastPrompts.join("\\n\\n====================\\n\\n"));
+  alert("Semua prompt sudah disalin.");
+}
+</script>
+</body>
+</html>
