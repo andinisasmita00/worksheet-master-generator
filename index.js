@@ -127,13 +127,29 @@ Buat halaman worksheet yang siap dicetak dan langsung dapat dikerjakan anak.`;
 function json(data, status=200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: {"content-type":"application/json; charset=UTF-8"}
+    headers: {
+      "content-type": "application/json; charset=UTF-8",
+      "Access-Control-Allow-Origin": "https://hoppscotch.io",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, x-admin-key"
+    }
   });
 }
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": "https://hoppscotch.io",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, x-admin-key",
+          "Access-Control-Max-Age": "86400"
+        }
+      });
+    }
 
     if (url.pathname === "/health") return json({ok:true, version:"5.2-cloudflare"});
 
